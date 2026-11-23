@@ -50,4 +50,4 @@ install -m 644 "packaging/conf/minimal-ime.conf" "${IM_CONF_DIR}/minimal-ime.con
 cp -f --remove-destination "data/"* "${DATA_DIR}/"
 chmod -R a+rX "$DATA_DIR"
 
-echo "ビルド＆インストール完了！ 一般ユーザー権限で fcitx5 -r -d を実行して Fcitx5 を再起動してください。"
+echo "ビルド＆インストール完了！ 一般ユーザー権限で fcitx5 -r -d  # X11環境のみ。Wayland環境(KDE Plasma等)はログアウト→再ログインで反映 を実行して Fcitx5 を再起動してください。"

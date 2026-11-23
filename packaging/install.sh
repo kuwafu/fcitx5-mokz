@@ -42,4 +42,4 @@ install -m 644 "${SCRIPT_DIR}/conf/minimal-ime.conf" "${IM_CONF_DIR}/minimal-ime
 cp -f --remove-destination "${SCRIPT_DIR}/data/"* "${DATA_DIR}/"
 chmod -R a+rX "$DATA_DIR"
 
-echo "インストール完了！ Fcitx5 を再起動（fcitx5 -r -d）して、Fcitx5設定から『Minimal IME』を追加してください。"
+echo "インストール完了！ Fcitx5 を再起動（fcitx5 -r -d  # X11環境のみ。Wayland環境(KDE Plasma等)はログアウト→再ログインで反映）して、Fcitx5設定から『Minimal IME』を追加してください。"
