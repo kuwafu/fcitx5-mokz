@@ -27,23 +27,23 @@ enum class ImeMode {
     SEGMENT_NAV
 };
 
-class MinimalAddon : public fcitx::InputMethodEngineV2 {
+class MokzAddon : public fcitx::InputMethodEngineV2 {
 public:
-    explicit MinimalAddon(fcitx::AddonManager* manager)
+    explicit MokzAddon(fcitx::AddonManager* manager)
         : manager_(manager) {
-        if (!minimal_ime::ViterbiEngine::ensureEngines()) {
-            FCITX_ERROR() << "[MinimalAddon] Failed to initialize hp-ime Stage1/Reranker engines";
+        if (!mokz::ViterbiEngine::ensureEngines()) {
+            FCITX_ERROR() << "[MokzAddon] Failed to initialize hp-ime Stage1/Reranker engines";
         }
         history_.initFromHome();
     }
 
-    ~MinimalAddon() override {
+    ~MokzAddon() override {
         history_.save();
     }
 
     std::vector<fcitx::InputMethodEntry> listInputMethods() override {
         std::vector<fcitx::InputMethodEntry> entries;
-        entries.emplace_back("minimal-ime", "Minimal IME", "ja", "minimal_addon")
+        entries.emplace_back("mokz", "Mokz", "ja", "mokz")
                .setLabel("あ")
                .setIcon("input-keyboard");
         return entries;
@@ -105,14 +105,14 @@ private:
         }
     }
 
-    minimal_ime::SuggestWord::SelectCallback makeSelectCallback() {
+    mokz::SuggestWord::SelectCallback makeSelectCallback() {
         return [this](fcitx::InputContext* ic, int index) {
             this->selectCandidateFromMouse(ic, index);
         };
     }
 
     void renderCandidatePopup(fcitx::InputContext* ic) {
-        minimal_ime::PreeditRenderer::renderCandidatePopup(
+        mokz::PreeditRenderer::renderCandidatePopup(
             ic, currentSegmentCandidates_, selectedIndex_, makeSelectCallback());
     }
 
@@ -121,7 +121,7 @@ private:
         std::string evalYomi = currentPreedit_;
         if (romajiConverter_.pending() == "n") evalYomi += "ん";
 
-        minimal_ime::CandidateBuilder::buildInputtingSuggestions(
+        mokz::CandidateBuilder::buildInputtingSuggestions(
             evalYomi, rawInput_, history_, forcedBoundaries_,
             currentSegmentCandidates_, currentCandidateIsWhole_);
 
@@ -141,12 +141,12 @@ private:
             return;
         }
         fcitx::Text text(display, fcitx::TextFormatFlag::Underline);
-        minimal_ime::PreeditRenderer::setClientOrServerPreedit(ic, text);
+        mokz::PreeditRenderer::setClientOrServerPreedit(ic, text);
         updateInputtingSuggestions(ic);
     }
 
     void renderStage1Preedit(fcitx::InputContext* ic) {
-        minimal_ime::PreeditRenderer::renderStage1Preedit(
+        mokz::PreeditRenderer::renderStage1Preedit(
             ic, currentSegmentCandidates_, selectedIndex_, updatingPreview_);
     }
 
@@ -163,7 +163,7 @@ private:
             selectedIndex_ >= 0 && selectedIndex_ < static_cast<int>(currentSegmentCandidates_.size())) {
             chosen = currentSegmentCandidates_[selectedIndex_];
         }
-        minimal_ime::PreeditRenderer::renderSegmentsPreedit(
+        mokz::PreeditRenderer::renderSegmentsPreedit(
             ic, currentSegments_, focusedSegmentIndex_, chosen, isCurrentSelectionWhole(), updatingPreview_);
     }
 
@@ -172,7 +172,7 @@ private:
         forcedBoundaries_.clear();
         if (currentSegments_.empty()) return;
 
-        const int totalChars = static_cast<int>(minimal_ime::KanaUtils::countUtf8Chars(currentPreedit_));
+        const int totalChars = static_cast<int>(mokz::KanaUtils::countUtf8Chars(currentPreedit_));
         if (totalChars <= 0) return;
 
         for (const auto& seg : currentSegments_) {
@@ -186,7 +186,7 @@ private:
     void resegmentFromFocused(fcitx::InputContext* ic, int chosenCharLen, const std::string& chosenWord) {
         if (focusedSegmentIndex_ < 0 || focusedSegmentIndex_ >= static_cast<int>(currentSegments_.size())) return;
 
-        const int totalChars = static_cast<int>(minimal_ime::KanaUtils::countUtf8Chars(currentPreedit_));
+        const int totalChars = static_cast<int>(mokz::KanaUtils::countUtf8Chars(currentPreedit_));
         if (totalChars <= 0) return;
 
         auto& activeSeg = currentSegments_[focusedSegmentIndex_];
@@ -232,12 +232,12 @@ private:
         }
         boundaries.insert(newEnd);
 
-        auto reseg = minimal_ime::ViterbiEngine::convertToSegments(
+        auto reseg = mokz::ViterbiEngine::convertToSegments(
             currentPreedit_, history_.commitHistory(), history_.bigramHistory(),
             boundaries, activeSeg.word);
 
         // focusedSegmentIndex_ までの確定部分を維持し、後ろだけ差し替え
-        std::vector<minimal_ime::ViterbiSegment> updated;
+        std::vector<mokz::ViterbiSegment> updated;
         updated.reserve(currentSegments_.size());
         for (int i = 0; i <= focusedSegmentIndex_; ++i) {
             updated.push_back(currentSegments_[i]);
@@ -253,7 +253,7 @@ private:
 
     void showCandidateList(fcitx::InputContext* ic) {
         if (!ic || currentSegments_.empty()) return;
-        minimal_ime::CandidateBuilder::buildConversionCandidatesDynamic(
+        mokz::CandidateBuilder::buildConversionCandidatesDynamic(
             currentPreedit_, rawInput_, currentSegments_, focusedSegmentIndex_,
             segmentEdited_, history_, currentSegmentCandidates_, candidateCharLengths_, currentCandidateIsWhole_);
         renderCandidatePopup(ic);
@@ -337,7 +337,7 @@ private:
             return;
         }
 
-        minimal_ime::KanaUtils::popBackUtf8(displayed);
+        mokz::KanaUtils::popBackUtf8(displayed);
         if (displayed.empty()) {
             resetState(ic);
             return;
@@ -373,7 +373,7 @@ private:
 
     void startViterbiConversion(fcitx::InputContext* ic) {
         currentPreedit_ += romajiConverter_.flush();
-        currentSegments_ = minimal_ime::ViterbiEngine::convertToSegments(
+        currentSegments_ = mokz::ViterbiEngine::convertToSegments(
             currentPreedit_, history_.commitHistory(), history_.bigramHistory(),
             forcedBoundaries_, history_.lastCommittedWord());
         if (!currentSegments_.empty()) {
@@ -413,7 +413,7 @@ private:
                                  ? currentSegmentCandidates_[selectedIndex_]
                                  : currentSegments_[focusedSegmentIndex_].word;
 
-        auto learnSegment = [&](const minimal_ime::ViterbiSegment& seg) {
+        auto learnSegment = [&](const mokz::ViterbiSegment& seg) {
             if (!seg.stemYomi.empty() && !seg.suffixWord.empty() && seg.word.size() > seg.suffixWord.size()) {
                 std::string stemWord = seg.word.substr(0, seg.word.size() - seg.suffixWord.size());
                 history_.recordCommit(seg.stemYomi, stemWord);
@@ -512,8 +512,8 @@ public:
             currentPreedit_ += romajiConverter_.flush();
 
             if (currentMode_ == ImeMode::INPUTTING) {
-                std::string converted = minimal_ime::KanaUtils::applyFnConversion(currentPreedit_, rawInput_, sym);
-                const int totalChars = static_cast<int>(minimal_ime::KanaUtils::countUtf8Chars(currentPreedit_));
+                std::string converted = mokz::KanaUtils::applyFnConversion(currentPreedit_, rawInput_, sym);
+                const int totalChars = static_cast<int>(mokz::KanaUtils::countUtf8Chars(currentPreedit_));
 
                 currentSegments_.clear();
                 currentSegments_.push_back({0, totalChars, currentPreedit_, converted, converted, ""});
@@ -540,8 +540,8 @@ public:
                     auto& seg = currentSegments_[focusedSegmentIndex_];
                     std::string rawForSeg = (currentSegments_.size() == 1 && !rawInput_.empty())
                                                 ? rawInput_
-                                                : minimal_ime::KanaUtils::kanaToRomaji(seg.yomi);
-                    std::string converted = minimal_ime::KanaUtils::applyFnConversion(seg.yomi, rawForSeg, sym);
+                                                : mokz::KanaUtils::kanaToRomaji(seg.yomi);
+                    std::string converted = mokz::KanaUtils::applyFnConversion(seg.yomi, rawForSeg, sym);
                     seg.word = converted;
                     segmentEdited_ = true;
 
@@ -574,7 +574,7 @@ public:
             if (isBackSpace && !hasCtrl && !hasAlt) {
                 if (!romajiConverter_.pending().empty() || !currentPreedit_.empty()) {
                     if (!rawInput_.empty()) rawInput_.pop_back();
-                    if (!romajiConverter_.backspace()) minimal_ime::KanaUtils::popBackUtf8(currentPreedit_);
+                    if (!romajiConverter_.backspace()) mokz::KanaUtils::popBackUtf8(currentPreedit_);
                     renderInputtingPreedit(ic);
                     event.filterAndAccept();
                     return;
@@ -656,7 +656,7 @@ public:
             }
 
             if (digitSelectIndex >= 0 && !currentSegmentCandidates_.empty()) {
-                int pageOffset = (selectedIndex_ / minimal_ime::PreeditRenderer::CANDIDATE_PAGE_SIZE) * minimal_ime::PreeditRenderer::CANDIDATE_PAGE_SIZE;
+                int pageOffset = (selectedIndex_ / mokz::PreeditRenderer::CANDIDATE_PAGE_SIZE) * mokz::PreeditRenderer::CANDIDATE_PAGE_SIZE;
                 int targetIdx = pageOffset + digitSelectIndex;
                 if (targetIdx < static_cast<int>(currentSegmentCandidates_.size())) {
                     selectedIndex_ = targetIdx;
@@ -667,8 +667,8 @@ public:
             }
 
             if ((isPageDown || isPageUp) && !currentSegmentCandidates_.empty()) {
-                int delta = isPageDown ? minimal_ime::PreeditRenderer::CANDIDATE_PAGE_SIZE
-                                       : -minimal_ime::PreeditRenderer::CANDIDATE_PAGE_SIZE;
+                int delta = isPageDown ? mokz::PreeditRenderer::CANDIDATE_PAGE_SIZE
+                                       : -mokz::PreeditRenderer::CANDIDATE_PAGE_SIZE;
                 selectedIndex_ = std::clamp(selectedIndex_ + delta, 0, static_cast<int>(currentSegmentCandidates_.size()) - 1);
                 renderCandidatePopup(ic);
                 renderStage1Preedit(ic);
@@ -767,7 +767,7 @@ public:
             }
 
             if (digitSelectIndex >= 0 && !currentSegmentCandidates_.empty()) {
-                int pageOffset = (selectedIndex_ / minimal_ime::PreeditRenderer::CANDIDATE_PAGE_SIZE) * minimal_ime::PreeditRenderer::CANDIDATE_PAGE_SIZE;
+                int pageOffset = (selectedIndex_ / mokz::PreeditRenderer::CANDIDATE_PAGE_SIZE) * mokz::PreeditRenderer::CANDIDATE_PAGE_SIZE;
                 int targetIdx = pageOffset + digitSelectIndex;
                 if (targetIdx < static_cast<int>(currentSegmentCandidates_.size())) {
                     selectedIndex_ = targetIdx;
@@ -778,8 +778,8 @@ public:
             }
 
             if ((isPageDown || isPageUp) && !currentSegmentCandidates_.empty()) {
-                int delta = isPageDown ? minimal_ime::PreeditRenderer::CANDIDATE_PAGE_SIZE
-                                       : -minimal_ime::PreeditRenderer::CANDIDATE_PAGE_SIZE;
+                int delta = isPageDown ? mokz::PreeditRenderer::CANDIDATE_PAGE_SIZE
+                                       : -mokz::PreeditRenderer::CANDIDATE_PAGE_SIZE;
                 selectedIndex_ = std::clamp(selectedIndex_ + delta, 0, static_cast<int>(currentSegmentCandidates_.size()) - 1);
                 if (segmentEdited_ && !isCurrentSelectionWhole()) {
                     currentSegments_[focusedSegmentIndex_].word = currentSegmentCandidates_[selectedIndex_];
@@ -801,7 +801,7 @@ public:
                 segmentEdited_ = true;
                 focusedSegmentIndex_ = std::clamp(focusedSegmentIndex_, 0, static_cast<int>(currentSegments_.size()) - 1);
                 auto& seg = currentSegments_[focusedSegmentIndex_];
-                const int totalChars = static_cast<int>(minimal_ime::KanaUtils::countUtf8Chars(currentPreedit_));
+                const int totalChars = static_cast<int>(mokz::KanaUtils::countUtf8Chars(currentPreedit_));
                 const int newEnd = seg.endChar + (isRight ? 1 : -1);
 
                 // 最低1文字以上、かつ全体の文字数を超えない範囲
@@ -838,7 +838,7 @@ public:
                     currentSegments_.resize(focusedSegmentIndex_ + 1);
                     if (newEnd < totalChars) {
                         const std::string restYomi = getSubstrByChar(currentPreedit_, newEnd, totalChars - newEnd);
-                        auto restSegments = minimal_ime::ViterbiEngine::convertToSegments(
+                        auto restSegments = mokz::ViterbiEngine::convertToSegments(
                             restYomi, history_.commitHistory(), history_.bigramHistory(),
                             std::set<int>{}, seg.word);
 
@@ -967,15 +967,15 @@ public:
             }
         }
     } catch (const std::exception& e) {
-        FCITX_ERROR() << "[MinimalAddon] Exception caught in keyEvent firewall: " << e.what();
+        FCITX_ERROR() << "[MokzAddon] Exception caught in keyEvent firewall: " << e.what();
     } catch (...) {
-        FCITX_ERROR() << "[MinimalAddon] Unknown exception caught in keyEvent firewall.";
+        FCITX_ERROR() << "[MokzAddon] Unknown exception caught in keyEvent firewall.";
     }
 
 private:
     fcitx::AddonManager* manager_;
-    minimal_ime::HistoryManager history_;
-    minimal_ime::RomajiConverter romajiConverter_;
+    mokz::HistoryManager history_;
+    mokz::RomajiConverter romajiConverter_;
 
     bool updatingPreview_ = false;
     bool segmentEdited_ = false;
@@ -984,7 +984,7 @@ private:
 
     std::string rawInput_;
     std::string currentPreedit_;
-    std::vector<minimal_ime::ViterbiSegment> currentSegments_;
+    std::vector<mokz::ViterbiSegment> currentSegments_;
     std::set<int> forcedBoundaries_;
     ImeMode currentMode_ = ImeMode::INPUTTING;
     std::vector<std::string> currentSegmentCandidates_;
@@ -992,10 +992,10 @@ private:
     std::vector<bool> currentCandidateIsWhole_;
 };
 
-class MinimalAddonFactory : public fcitx::AddonFactory {
+class MokzAddonFactory : public fcitx::AddonFactory {
     fcitx::AddonInstance* create(fcitx::AddonManager* manager) override {
-        return new MinimalAddon(manager);
+        return new MokzAddon(manager);
     }
 };
 
-FCITX_ADDON_FACTORY(MinimalAddonFactory);
+FCITX_ADDON_FACTORY(MokzAddonFactory);

@@ -10,7 +10,7 @@
 #include "nlp/viterbi.hpp"
 #include "storage/history_manager.hpp"
 
-namespace minimal_ime {
+namespace mokz {
 
 struct SegmentCandidateItem {
     std::string word;
@@ -214,4 +214,4 @@ public:
     }
 };
 
-} // namespace minimal_ime
+} // namespace mokz

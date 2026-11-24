@@ -16,7 +16,7 @@
 #include <fcitx-utils/log.h>
 #include "decay_history.hpp"
 
-namespace minimal_ime {
+namespace mokz {
 
 struct ScopedFileLock {
     explicit ScopedFileLock(const std::string& lockPath)
@@ -84,7 +84,7 @@ public:
         const char* home = std::getenv("HOME");
         if (!home || !*home) return;
 
-        historyPath_ = std::string(home) + "/.local/share/fcitx5/minimal_addon/user_history.dat";
+        historyPath_ = std::string(home) + "/.local/share/fcitx5/mokz/user_history.dat";
         decayHistoryPath_ = historyPath_ + ".decay";
 
         try {
@@ -289,4 +289,4 @@ private:
     DecayHistory decayHistory_;
 };
 
-} // namespace minimal_ime
+} // namespace mokz

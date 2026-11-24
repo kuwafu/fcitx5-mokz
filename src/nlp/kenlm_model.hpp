@@ -6,11 +6,11 @@
 #include <exception>
 #include "lm/model.hh"
 
-namespace minimal_ime {
+namespace mokz {
 
 class KenLMModel {
 public:
-    KenLMModel(const std::string& path = "/usr/share/fcitx5/minimal_addon/wiki_3gram.binary") {
+    KenLMModel(const std::string& path = "/usr/share/fcitx5/mokz/wiki_3gram.binary") {
         try {
             lm::ngram::Config config;
             config.load_method = util::LAZY; // OSのmmapによるオンデマンド高速ロード
@@ -57,4 +57,4 @@ private:
     std::unique_ptr<lm::base::Model> model_;
 };
 
-} // namespace minimal_ime
+} // namespace mokz

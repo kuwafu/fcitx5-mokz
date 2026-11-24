@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BIN_NAME="minimal_addon-x86_64"
-SRC_NAME="minimal_addon-src"
+BIN_NAME="fcitx5-mokz-v1.0.1-x86_64"
+SRC_NAME="fcitx5-mokz-v1.0.1-source"
 BIN_DIR="dist/${BIN_NAME}"
 SRC_DIR="dist/${SRC_NAME}"
 
@@ -12,27 +12,27 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
 
 echo "=== 2. バイナリ検証（依存ライブラリ & ハードコードパス） ==="
-ldd build/libminimal_addon.so
-if ldd build/libminimal_addon.so | grep -q "libmarisa"; then
+ldd build/libmokz.so
+if ldd build/libmokz.so | grep -q "libmarisa"; then
   echo "エラー: libmarisa が動的リンクのままです"
   exit 1
 fi
-if strings build/libminimal_addon.so | grep -E "/home/|/workspace/"; then
+if strings build/libmokz.so | grep -E "/home/|/workspace/"; then
   echo "エラー: バイナリ内にローカル開発パスが残存しています"
   exit 1
 fi
 
 echo "=== 3. バイナリ配布アーカイブ構成 (${BIN_NAME}.tar.gz) ==="
 mkdir -p "${BIN_DIR}/conf" "${BIN_DIR}/data"
-cp build/libminimal_addon.so "${BIN_DIR}/"
-strip --strip-unneeded "${BIN_DIR}/libminimal_addon.so"
-cp packaging/conf/*.conf "${BIN_DIR}/conf/"
+cp build/libmokz.so "${BIN_DIR}/"
+strip --strip-unneeded "${BIN_DIR}/libmokz.so"
+cp -r packaging/conf/* "${BIN_DIR}/conf/"
 cp packaging/install.sh packaging/uninstall.sh packaging/README.md "${BIN_DIR}/"
 [ -f LICENSE ] && cp LICENSE "${BIN_DIR}/"
 [ -f THIRD_PARTY_LICENSES.md ] && cp THIRD_PARTY_LICENSES.md "${BIN_DIR}/"
 
 for f in dict.bin kenlm.binary reranker.bin connection.bin; do
-  cp -L "/usr/share/fcitx5/minimal_addon/${f}" "${BIN_DIR}/data/${f}"
+  cp -L "/usr/share/fcitx5/mokz/${f}" "${BIN_DIR}/data/${f}"
 done
 
 tar -czf "dist/${BIN_NAME}.tar.gz" -C dist "${BIN_NAME}"
@@ -43,7 +43,7 @@ cp CMakeLists.txt "${SRC_DIR}/"
 cp -r src "${SRC_DIR}/"
 rm -rf "${SRC_DIR}/src/_backup_"*
 cp -r third_party "${SRC_DIR}/"
-cp packaging/conf/*.conf "${SRC_DIR}/packaging/conf/"
+cp -r packaging/conf/* "${SRC_DIR}/packaging/conf/"
 cp packaging/build_and_install.sh "${SRC_DIR}/"
 cp packaging/uninstall.sh "${SRC_DIR}/"
 cp packaging/README_SRC.md "${SRC_DIR}/README.md"
@@ -56,7 +56,7 @@ if [ -d dict_tools ]; then
 fi
 
 for f in dict.bin kenlm.binary reranker.bin connection.bin; do
-  cp -L "/usr/share/fcitx5/minimal_addon/${f}" "${SRC_DIR}/data/${f}"
+  cp -L "/usr/share/fcitx5/mokz/${f}" "${SRC_DIR}/data/${f}"
 done
 
 tar -czf "dist/${SRC_NAME}.tar.gz" -C dist "${SRC_NAME}"

@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-namespace minimal_ime {
+namespace mokz {
 
 struct MozcEntry {
     std::string_view yomi;
@@ -27,7 +27,7 @@ private:
     size_t mappedBytes_ = 0;
 
     MozcConnection() {
-        init("/usr/share/fcitx5/minimal_addon/connection.bin");
+        init("/usr/share/fcitx5/mokz/connection.bin");
     }
 
     ~MozcConnection() {
@@ -113,4 +113,4 @@ inline bool parseMozcKey(std::string_view key, MozcEntry& out) noexcept {
     return !out.word.empty();
 }
 
-} // namespace minimal_ime
+} // namespace mokz

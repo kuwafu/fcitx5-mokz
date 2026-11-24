@@ -6,7 +6,7 @@
 #include <vector>
 #include <cctype>
 
-namespace minimal_ime {
+namespace mokz {
 
 class RomajiConverter {
 public:
@@ -184,4 +184,4 @@ private:
     }
 };
 
-} // namespace minimal_ime
+} // namespace mokz

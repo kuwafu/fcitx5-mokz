@@ -12,7 +12,7 @@
 #include "ggml-cpu.h"
 #include "ggml-backend.h"
 
-namespace minimal_ime {
+namespace mokz {
 
 struct RerankToken {
     uint16_t wordId; // 0..4095 (0 = UNK)
@@ -34,8 +34,8 @@ public:
     NeuralReranker() {
         backend_ = ggml_backend_cpu_init();
         initWeightsMemory();
-        loadVocab("/usr/share/fcitx5/minimal_addon/reranker_vocab.txt");
-        loadModel("/usr/share/fcitx5/minimal_addon/reranker_model.bin");
+        loadVocab("/usr/share/fcitx5/mokz/reranker_vocab.txt");
+        loadModel("/usr/share/fcitx5/mokz/reranker_model.bin");
     }
 
     ~NeuralReranker() {
@@ -247,4 +247,4 @@ private:
     struct ggml_tensor* w_out_bwd_ = nullptr;
 };
 
-} // namespace minimal_ime
+} // namespace mokz

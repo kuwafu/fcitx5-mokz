@@ -4,7 +4,7 @@
 #include <string_view>
 #include <cstdint>
 
-namespace minimal_ime {
+namespace mokz {
 
 enum POS : uint8_t {
     POS_BOS = 0,
@@ -95,4 +95,4 @@ public:
     }
 };
 
-} // namespace minimal_ime
+} // namespace mokz

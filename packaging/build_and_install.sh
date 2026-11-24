@@ -13,7 +13,7 @@ echo "=== 1. ローカル環境向けビルド ==="
 rm -rf build
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
-strip --strip-unneeded build/libminimal_addon.so
+strip --strip-unneeded build/libmokz.so
 
 echo "=== 2. Fcitx5 アドオン配置先の判別 ==="
 ADDON_DIR=""
@@ -36,16 +36,16 @@ if [ -z "$ADDON_DIR" ]; then
   exit 1
 fi
 
-DATA_DIR="/usr/share/fcitx5/minimal_addon"
+DATA_DIR="/usr/share/fcitx5/mokz"
 ADDON_CONF_DIR="/usr/share/fcitx5/addon"
 IM_CONF_DIR="/usr/share/fcitx5/inputmethod"
 
 echo "インストール先アドオンディレクトリ: ${ADDON_DIR}"
 
 install -d -m 755 "$ADDON_DIR" "$DATA_DIR" "$ADDON_CONF_DIR" "$IM_CONF_DIR"
-install -m 755 "build/libminimal_addon.so" "${ADDON_DIR}/libminimal_addon.so"
-install -m 644 "packaging/conf/minimal_addon.conf" "${ADDON_CONF_DIR}/minimal_addon.conf"
-install -m 644 "packaging/conf/minimal-ime.conf" "${IM_CONF_DIR}/minimal-ime.conf"
+install -m 755 "build/libmokz.so" "${ADDON_DIR}/libmokz.so"
+install -m 644 "packaging/conf/addon/mokz.conf" "${ADDON_CONF_DIR}/mokz.conf"
+install -m 644 "packaging/conf/inputmethod/mokz.conf" "${IM_CONF_DIR}/mokz.conf"
 
 cp -f --remove-destination "data/"* "${DATA_DIR}/"
 chmod -R a+rX "$DATA_DIR"

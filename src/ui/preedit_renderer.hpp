@@ -11,7 +11,7 @@
 #include <fcitx/userinterface.h>
 #include "nlp/viterbi.hpp"
 
-namespace minimal_ime {
+namespace mokz {
 
 class SuggestWord : public fcitx::CandidateWord {
 public:
@@ -138,4 +138,4 @@ public:
     }
 };
 
-} // namespace minimal_ime
+} // namespace mokz

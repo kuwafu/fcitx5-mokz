@@ -28,18 +28,18 @@ if [ -z "$ADDON_DIR" ]; then
   exit 1
 fi
 
-DATA_DIR="/usr/share/fcitx5/minimal_addon"
+DATA_DIR="/usr/share/fcitx5/mokz"
 ADDON_CONF_DIR="/usr/share/fcitx5/addon"
 IM_CONF_DIR="/usr/share/fcitx5/inputmethod"
 
 echo "インストール先アドオンディレクトリ: ${ADDON_DIR}"
 
 install -d -m 755 "$ADDON_DIR" "$DATA_DIR" "$ADDON_CONF_DIR" "$IM_CONF_DIR"
-install -m 755 "${SCRIPT_DIR}/libminimal_addon.so" "${ADDON_DIR}/libminimal_addon.so"
-install -m 644 "${SCRIPT_DIR}/conf/minimal_addon.conf" "${ADDON_CONF_DIR}/minimal_addon.conf"
-install -m 644 "${SCRIPT_DIR}/conf/minimal-ime.conf" "${IM_CONF_DIR}/minimal-ime.conf"
+install -m 755 "${SCRIPT_DIR}/libmokz.so" "${ADDON_DIR}/libmokz.so"
+install -m 644 "${SCRIPT_DIR}/conf/addon/mokz.conf" "${ADDON_CONF_DIR}/mokz.conf"
+install -m 644 "${SCRIPT_DIR}/conf/inputmethod/mokz.conf" "${IM_CONF_DIR}/mokz.conf"
 
 cp -f --remove-destination "${SCRIPT_DIR}/data/"* "${DATA_DIR}/"
 chmod -R a+rX "$DATA_DIR"
 
-echo "インストール完了！ Fcitx5 を再起動（fcitx5 -r -d  # X11環境のみ。Wayland環境(KDE Plasma等)はログアウト→再ログインで反映）して、Fcitx5設定から『Minimal IME』を追加してください。"
+echo "インストール完了！ Fcitx5 を再起動（fcitx5 -r -d  # X11環境のみ。Wayland環境(KDE Plasma等)はログアウト→再ログインで反映）して、Fcitx5設定から『Mokz』を追加してください。"

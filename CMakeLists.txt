@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(fcitx5-minimal-addon VERSION 1.0.1 LANGUAGES CXX)
+project(fcitx5-mokz VERSION 1.0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -18,12 +18,12 @@ target_include_directories(marisa_static PUBLIC
 )
 target_compile_options(marisa_static PRIVATE -O3 -march=x86-64-v2 -ffile-prefix-map=${CMAKE_CURRENT_SOURCE_DIR}=.)
 
-add_library(minimal_addon SHARED
-    src/minimal_addon.cpp
+add_library(mokz SHARED
+    src/mokz.cpp
     third_party/hp-ime/reranker_engine.cpp
 )
 
-target_include_directories(minimal_addon PRIVATE
+target_include_directories(mokz PRIVATE
     src
     src/input
     src/nlp
@@ -32,12 +32,12 @@ target_include_directories(minimal_addon PRIVATE
     third_party/hp-ime/include
 )
 
-target_link_libraries(minimal_addon PRIVATE
+target_link_libraries(mokz PRIVATE
     Fcitx5::Core
     marisa_static
 )
 
-target_compile_options(minimal_addon PRIVATE -O3 -march=x86-64-v2 -ffile-prefix-map=${CMAKE_CURRENT_SOURCE_DIR}=.)
+target_compile_options(mokz PRIVATE -O3 -march=x86-64-v2 -ffile-prefix-map=${CMAKE_CURRENT_SOURCE_DIR}=.)
 
 if(DEFINED FCITX5_INSTALL_ADDON_DIR)
     set(ADDON_INSTALL_DIR ${FCITX5_INSTALL_ADDON_DIR})
@@ -45,6 +45,6 @@ else()
     set(ADDON_INSTALL_DIR lib/fcitx5)
 endif()
 
-install(TARGETS minimal_addon LIBRARY DESTINATION ${ADDON_INSTALL_DIR})
-install(FILES packaging/conf/minimal_addon.conf DESTINATION share/fcitx5/addon)
-install(FILES packaging/conf/minimal-ime.conf DESTINATION share/fcitx5/inputmethod)
+install(TARGETS mokz LIBRARY DESTINATION ${ADDON_INSTALL_DIR})
+install(FILES packaging/conf/addon/mokz.conf DESTINATION share/fcitx5/addon)
+install(FILES packaging/conf/inputmethod/mokz.conf DESTINATION share/fcitx5/inputmethod)

@@ -9,7 +9,7 @@
 #include <fstream>
 #include <filesystem>
 
-namespace minimal_ime {
+namespace mokz {
 
 #pragma pack(push, 1)
 struct HistoryRecord {
@@ -200,4 +200,4 @@ private:
     std::vector<HistoryRecord> records_;
 };
 
-} // namespace minimal_ime
+} // namespace mokz

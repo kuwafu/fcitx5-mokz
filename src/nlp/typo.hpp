@@ -5,7 +5,7 @@
 #include <string_view>
 #include <algorithm>
 
-namespace minimal_ime {
+namespace mokz {
 
 class TypoCorrector {
 public:
@@ -88,4 +88,4 @@ public:
     }
 };
 
-} // namespace minimal_ime
+} // namespace mokz

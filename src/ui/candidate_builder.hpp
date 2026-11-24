@@ -11,7 +11,7 @@
 #include "nlp/viterbi.hpp"
 #include "storage/history_manager.hpp"
 
-namespace minimal_ime {
+namespace mokz {
 
 class CandidateBuilder {
 public:
@@ -332,4 +332,4 @@ public:
     }
 };
 
-} // namespace minimal_ime
+} // namespace mokz

@@ -16,7 +16,7 @@
 #include "stage1_engine.hpp"
 #include "reranker_engine.hpp"
 
-namespace minimal_ime {
+namespace mokz {
 
 inline const std::set<int>& emptyIntSet() {
     static const std::set<int> empty;
@@ -62,7 +62,7 @@ public:
 
     static bool ensureEngines() {
         static const bool ok = [] {
-            const std::string dir = "/usr/share/fcitx5/minimal_addon/";
+            const std::string dir = "/usr/share/fcitx5/mokz/";
             const std::string dict = dir + "dict.bin";
             const std::string kenlm = dir + "kenlm.binary";
             const std::string reranker = dir + "reranker.bin";
@@ -370,4 +370,4 @@ private:
     }
 };
 
-} // namespace minimal_ime
+} // namespace mokz

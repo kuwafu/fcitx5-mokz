@@ -1,23 +1,29 @@
-# fcitx5-minimal-addon (Minimal IME)
+# fcitx5-mokz
 
-高速 Viterbi 探索・MARISA-trie 辞書（約160万語）・4-gram KenLM・ニューラルリランカーを搭載した C++20 製 Fcitx5 日本語入力アドオンです。
+Fcitx5 で使える日本語 IME です。
 
-## 配布パッケージ（Releases）
-- **minimal_addon-x86_64.tar.gz**: x86_64 向けコンパイル済みバイナリ ＋ 辞書・モデルバイナリ同梱版
-- **minimal_addon-src.tar.gz**: ローカル環境向けソースコード ＋ marisa-trie ソース ＋ 辞書・モデルバイナリ同梱版
+## インストール (x86_64)
 
-## ビルド ＆ パッケージ生成
+[Releases](https://github.com/kuwafu/fcitx5-mokz/releases) から `fcitx5-mokz-v1.0.1-x86_64.tar.gz` を落として実行します。
 
-    ./package.sh
+```bash
+F=$(find . ~/Downloads ~/ダウンロード -maxdepth 1 -name "fcitx5-mokz-v1.0.1-x86_64.tar.gz" 2>/dev/null | head -n1) && \
+tar -xzf "$F" && \
+cd fcitx5-mokz-v1.0.1-x86_64 && \
+sudo ./install.sh && \
+fcitx5 -r -d
+```
 
-dist/ 配下にコンパイル版・ソースコード版の両アーカイブが生成されます。
+Fcitx5 の設定画面から **Mokz** を追加すれば使えます。
 
-## インストール
-- コンパイル版を使う場合: アーカイブ展開後、`sudo ./install.sh`
-- ソースからビルドする場合: アーカイブ展開後、`sudo ./build_and_install.sh`
+## ビルド
 
-詳細は各パッケージ内の README.md を参照してください。
+```bash
+cmake -B build -DCMAKE_INSTALL_PREFIX=/usr
+cmake --build build -j$(nproc)
+sudo cmake --install build
+```
 
-## 反映方法の注意（Wayland / X11）
-- **Wayland 環境（KDE Plasma 6 / GNOME 等）**: `fcitx5 -r -d` を手動実行するとコンポジタとの接続が切れる場合があります。インストール後は **ログアウト → 再ログイン**（またはシステム設定の仮想キーボード再適用）で反映してください。
-- **X11 環境**: `fcitx5 -r -d` で再起動して反映できます。
+## ライセンス
+
+`LICENSE` および `THIRD_PARTY_LICENSES.md` を参照してください。

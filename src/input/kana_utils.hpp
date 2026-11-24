@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <fcitx-utils/key.h>
 
-namespace minimal_ime {
+namespace mokz {
 
 class KanaUtils {
 public:
@@ -303,4 +303,4 @@ public:
     }
 };
 
-} // namespace minimal_ime
+} // namespace mokz
