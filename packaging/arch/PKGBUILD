@@ -1,0 +1,35 @@
+# Maintainer: Kuwafu <https://github.com/kuwafu>
+pkgname=fcitx5-mokz-bin
+pkgver=1.0.1
+pkgrel=1
+pkgdesc="Japanese IME addon for Fcitx5 with fast Viterbi search, MARISA-trie dictionary, and neural reranker (prebuilt x86_64 binary)"
+arch=('x86_64')
+url="https://github.com/kuwafu/fcitx5-mokz"
+license=('MIT' 'BSD-2-Clause' 'BSD-3-Clause' 'Apache-2.0' 'GPL-2.0-or-later' 'LGPL-2.1-or-later')
+depends=('fcitx5' 'gcc-libs' 'glibc')
+provides=('fcitx5-mokz')
+conflicts=('fcitx5-mokz')
+source=("https://github.com/kuwafu/fcitx5-mokz/releases/download/v${pkgver}/fcitx5-mokz-v${pkgver}-x86_64.tar.gz")
+sha256sums=('b29fc0959126e2d9a16c435a9a8e5798058eaaf6086925ad3948cbd04d43dc3c')
+options=('!strip' '!debug')
+
+package() {
+    local _srcdir="${srcdir}/fcitx5-mokz-v${pkgver}-x86_64"
+
+    install -Dm755 "${_srcdir}/libmokz.so" \
+        "${pkgdir}/usr/lib/fcitx5/libmokz.so"
+
+    install -Dm644 "${_srcdir}/conf/addon/mokz.conf" \
+        "${pkgdir}/usr/share/fcitx5/addon/mokz.conf"
+    install -Dm644 "${_srcdir}/conf/inputmethod/mokz.conf" \
+        "${pkgdir}/usr/share/fcitx5/inputmethod/mokz.conf"
+
+    install -dm755 "${pkgdir}/usr/share/fcitx5/mokz"
+    install -m644 "${_srcdir}/data/"* \
+        "${pkgdir}/usr/share/fcitx5/mokz/"
+
+    install -Dm644 "${_srcdir}/LICENSE" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dm644 "${_srcdir}/THIRD_PARTY_LICENSES.md" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/THIRD_PARTY_LICENSES.md"
+}
