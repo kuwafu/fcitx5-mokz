@@ -121,7 +121,7 @@ jobs:
           fi
 
       - name: Release archive install.sh & ldd dependency check
-        if: matrix.os != 'ubuntu-22.04'
+        if: matrix.distro != 'ubuntu-22.04'
         run: |
           set -euo pipefail
           WORK_DIR="$(mktemp -d)"
