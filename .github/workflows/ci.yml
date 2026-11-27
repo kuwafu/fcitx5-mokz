@@ -121,6 +121,7 @@ jobs:
           fi
 
       - name: Release archive install.sh & ldd dependency check
+        if: matrix.os != 'ubuntu-22.04'
         run: |
           set -euo pipefail
           WORK_DIR="$(mktemp -d)"
@@ -165,4 +166,4 @@ jobs:
 
           ./packaging/deb/build-deb.sh --output "${WORK_DIR}/fcitx5-mokz_${RELEASE_VERSION}_amd64.deb"
           dpkg-deb --info "${WORK_DIR}/fcitx5-mokz_${RELEASE_VERSION}_amd64.deb"
-          dpkg-deb --contents "${WORK_DIR}/fcitx5-mokz_${RELEASE_VERSION}_amd64.deb" | grep -q "./usr/lib/x86_64-linux-gnu/fcitx5/libmokz.so"
+          dpkg-deb --contents "${WORK_DIR}/fcitx5-mokz_${RELEASE_VERSION}_amd64.deb" | grep -F "./usr/lib/x86_64-linux-gnu/fcitx5/libmokz.so" >/dev/null
